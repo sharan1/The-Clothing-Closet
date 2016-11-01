@@ -1,47 +1,38 @@
 <?php
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $model app\models\LoginForm */
+/* @var $model common\models\forms\Register */
+/* @var $form yii\widgets\ActiveForm */
 
-use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
-
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="login-box">
+    <div class="login-logo">
+        <a href=""><b>Login Form</b></a>
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <p class="login-box-msg"><!-- Sign in to start your session --></p>
 
-    <p>Please fill out the following fields to login:</p>
+        <?php $form = ActiveForm::begin(); ?>
 
-    <?php $form = ActiveForm::begin([
-        'id' => 'login-form',
-        'options' => ['class' => 'form-horizontal'],
-        'fieldConfig' => [
-            'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            'labelOptions' => ['class' => 'col-lg-1 control-label'],
-        ],
-    ]); ?>
-
-        <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
-
-        <?= $form->field($model, 'password')->passwordInput() ?>
-
-        <?= $form->field($model, 'rememberMe')->checkbox([
-            'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-        ]) ?>
-
-        <div class="form-group">
-            <div class="col-lg-offset-1 col-lg-11">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-            </div>
+        <div class="form-group has-feedback">
+            <?= Html::activeTextInput($model, 'email', ['class' => 'form-control', 'placeholder' => 'Enter Email Address']) ?>
+            <?= Html::error($model, 'email') ?>
         </div>
 
-    <?php ActiveForm::end(); ?>
+        <div class="form-group has-feedback">
+            <?= Html::activePasswordInput($model, 'password', ['class' => 'form-control', 'placeholder' => 'Enter Password']) ?>
+            <?= Html::error($model, 'password') ?>
+        </div>
 
-    <div class="col-lg-offset-1" style="color:#999;">
-        You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-        To modify the username/password, please check out the code <code>app\models\User::$users</code>.
+        <div class="form-group ">
+            <?= Html::submitButton('Submit', ['class' => 'btn btn-primary btn-block btn-flat']) ?>
+        </div><!-- /.col -->
+        <?php ActiveForm::end(); ?>
     </div>
+    <!-- /.login-box-body -->
 </div>
+<!-- /.login-box -->
+</body>

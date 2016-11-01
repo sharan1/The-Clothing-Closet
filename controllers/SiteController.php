@@ -8,6 +8,9 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\User;
+use app\models\Person;
+use app\components\AdminLogin; 
 
 class SiteController extends Controller
 {
@@ -60,7 +63,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->redirect(['login'])->send();
     }
 
     /**
@@ -70,17 +73,45 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+        $model = new AdminLogin();
+        if (!Yii::$app->user->isGuest) 
+        {
+            $userDetails = Person::findIdentity(Yii::$app->user->id);
+            if (isset($userDetails)) 
+            {
+                $this->redirect(['/person'])->send();
+            } 
+            else 
+            {
+                return $this->render('login', [
+                        'model' => $model,
+                ]);
+            }
+        } 
+        else 
+        {
+            $model = new AdminLogin();
+            if ($model->load(Yii::$app->request->post()) && $model->login()) 
+            {
+                $userDetails = Person::findIdentity(Yii::$app->user->id);
+                if (isset($userDetails)) 
+                {
+                    $this->redirect(['/person'])->send();
+                } 
+                else 
+                {
+                    return $this->render('login', [
+                            'model' => $model,
+                    ]);
+                }
+            } 
+            else 
+            {
+                return $this->render('login', [
+                        'model' => $model,
+                ]);
+            }
         }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-        return $this->render('login', [
-            'model' => $model,
-        ]);
     }
 
     /**

@@ -17,7 +17,10 @@
         "php": ">=5.4.0",
         "yiisoft/yii2": ">=2.0.5",
         "yiisoft/yii2-bootstrap": "*",
-        "yiisoft/yii2-swiftmailer": "*"
+        "yiisoft/yii2-swiftmailer": "*",
+        "almasaeed2010/adminlte": "2.3.2",
+        "FortAwesome/Font-Awesome": "4.3.0",
+        "kartik-v/yii2-widget-sidenav": "1.0.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
