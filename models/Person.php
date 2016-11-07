@@ -37,8 +37,9 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
+            [['FirstName', 'LastName', 'UserName', 'Password', 'Email', 'PrivilegeID'], 'required'],
             [['Address'], 'string'],
-            [['PrivilegeID', 'IsSubscribed', 'IsActive'], 'integer'],
+            [['PrivilegeID'], 'integer'],
             [['FirstName', 'LastName', 'UserName', 'Email'], 'string', 'max' => 30],
             [['Type', 'ContactNum'], 'string', 'max' => 20],
             [['Password', 'PasswordHash'], 'string', 'max' => 55],
