@@ -157,4 +157,9 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
         return null;
     }
+
+    public function getPrivilege()
+    {
+        
+    }
 }
