@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use app\models\Privilege;
 /**
  * This is the model class for table "Person".
  *
@@ -37,7 +37,7 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['FirstName', 'LastName', 'UserName', 'Password', 'Email', 'PrivilegeID'], 'required'],
+            [['FirstName', 'LastName', 'UserName', 'Email', 'PrivilegeID'], 'required'],
             [['Address'], 'string'],
             [['PrivilegeID'], 'integer'],
             [['FirstName', 'LastName', 'UserName', 'Email'], 'string', 'max' => 30],
@@ -62,7 +62,7 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'Password' => 'Password',
             'PasswordHash' => 'Password Hash',
             'Email' => 'Email',
-            'PrivilegeID' => 'Privilege ID',
+            'PrivilegeID' => 'Privilege',
             'IsSubscribed' => 'Is Subscribed',
             'IsActive' => 'Is Active',
         ];
@@ -160,6 +160,6 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
     public function getPrivilege()
     {
-        
+        return Privilege::find()->where(['PrivilegeID' => $this->PrivilegeID])->one();
     }
 }
