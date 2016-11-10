@@ -68,9 +68,20 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         ];
     }
 
+    public function beforeSave($insert)
+    {
+        if($insert)
+        {
+            $default_password = "welcome";
+            $this->Password = md5($default_password);
+            $this->PasswordHash = Yii::$app->getSecurity()->generateRandomString();
+        }
+        return parent::beforeSave($insert);
+    }
+
     public function verifyPassword($password)
     {
-        if($this->Password == $password)
+        if($this->Password == md5($password))
             return true;
         else
             return false;
@@ -125,7 +136,7 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public function getAuthKey()
     {
-        return $this->authKey;
+        return $this->PasswordHash;
     }
 
     /**
@@ -133,7 +144,7 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-        return $this->authKey === $authKey;
+        return $this->PasswordHash === $authKey;
     }
 
     /**
@@ -144,7 +155,7 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return $this->password === md5($password);
     }
 
     public static function findIdentityByAccessToken($token, $type = null)
@@ -161,5 +172,10 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function getPrivilege()
     {
         return Privilege::find()->where(['PrivilegeID' => $this->PrivilegeID])->one();
+    }
+
+    public function getFullName()
+    {
+        return $this->FirstName." ".$this->LastName;
     }
 }
