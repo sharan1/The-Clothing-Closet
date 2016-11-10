@@ -5,30 +5,16 @@ namespace app\controllers;
 use Yii;
 use app\models\Person;
 use app\models\PersonSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use app\components\Controller;
 
 /**
  * PersonController implements the CRUD actions for Person model.
  */
 class PersonController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all Person models.
      * @return mixed
@@ -101,7 +87,9 @@ class PersonController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->IsActive = 0;
+        $model->save();
 
         return $this->redirect(['index']);
     }
