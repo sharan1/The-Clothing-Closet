@@ -51,4 +51,9 @@ class Donation extends \yii\db\ActiveRecord
             'AddedBy' => 'Added By',
         ];
     }
+
+    public function getPerson()
+    {
+        return Donation::find()->where(['PersonID' => $this->PersonID])->one();
+    }
 }

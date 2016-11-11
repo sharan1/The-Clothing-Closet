@@ -4,6 +4,8 @@ namespace app\models;
 
 use Yii;
 
+use app\models\Person;
+
 /**
  * This is the model class for table "Brand".
  *
@@ -47,5 +49,19 @@ class Brand extends \yii\db\ActiveRecord
             'AddedOn' => 'Added On',
             'AddedBy' => 'Added By',
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if($insert)
+        {
+            $this->AddedBy = !(Yii::$app->user->isGuest) ? Yii::$app->user->id : null;
+        }
+        return parent::beforeSave($insert);
+    }
+
+    public function getAddedBy()
+    {
+        return $this->hasOne(Person::className(), ['PersonID' => 'AddedBy']);
     }
 }

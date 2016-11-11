@@ -6,16 +6,15 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Brand */
 
-$this->title = $model->BrandID;
+$this->title = "Brand #".$model->BrandID;
 $this->params['breadcrumbs'][] = ['label' => 'Brands', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = $model->BrandID;
 ?>
 <div class="brand-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->BrandID], ['class' => 'btn btn-primary']) ?>
+    <div class="pull-right" style="padding-bottom:20px">
+        <?= Html::a('Update', ['update', 'id' => $model->BrandID], ['class' => 'btn btn-primary', 'style' => 'margin-right:4px']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->BrandID], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -23,16 +22,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
-    </p>
+    </div>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'BrandID',
             'BrandName',
-            'IsActive',
             'AddedOn',
-            'AddedBy',
+            [
+                'attribute' => 'AddedBy',
+                'format' => 'raw',
+                'value' => $model->addedBy->fullName,
+            ],
         ],
     ]) ?>
 

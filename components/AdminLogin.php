@@ -1,6 +1,7 @@
 <?php namespace app\components;
 
 use app\models\User;
+use app\models\Person;
 use Yii;
 use yii\base\Model;
 
@@ -85,11 +86,11 @@ class AdminLogin extends Model
         {
             if(strpos($this->email, '@') == -1)
             {
-                $this->_user = User::findByEmail($this->email);
+                $this->_user = Person::findByEmail($this->email);
             }
             else
             {
-                $this->_user = User::findByUsername($this->email);
+                $this->_user = Person::findByUsername($this->email);
             }
         }
         return $this->_user;

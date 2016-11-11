@@ -12,6 +12,7 @@ use app\models\Brand;
  */
 class BrandSearch extends Brand
 {
+    public $AddedByName;
     /**
      * @inheritdoc
      */
@@ -19,7 +20,7 @@ class BrandSearch extends Brand
     {
         return [
             [['BrandID', 'IsActive', 'AddedBy'], 'integer'],
-            [['BrandName', 'AddedOn'], 'safe'],
+            [['BrandName', 'AddedOn', 'AddedByName'], 'safe'],
         ];
     }
 
@@ -41,12 +42,19 @@ class BrandSearch extends Brand
      */
     public function search($params)
     {
-        $query = Brand::find();
+        $query = Brand::find()->where([Brand::tableName().'.IsActive' => 1]);
+        $query->joinWith(['addedBy']);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+        ]);
+
+        $dataProvider->setSort([
+            'attributes' => [
+                'AddedByName', 'BrandName','AddedOn'
+            ]
         ]);
 
         $this->load($params);
@@ -56,16 +64,18 @@ class BrandSearch extends Brand
             // $query->where('0=1');
             return $dataProvider;
         }
-
+        $query->filterWhere(['or',
+            ['like','FirstName',$this->AddedByName],
+            ['like','LastName', $this->AddedByName]
+        ]);
         // grid filtering conditions
         $query->andFilterWhere([
             'BrandID' => $this->BrandID,
-            'IsActive' => $this->IsActive,
             'AddedOn' => $this->AddedOn,
-            'AddedBy' => $this->AddedBy,
         ]);
 
         $query->andFilterWhere(['like', 'BrandName', $this->BrandName]);
+        //$query->andFilterWhere(['like', 'AddedBy', $this->AddedByName]);
 
         return $dataProvider;
     }
