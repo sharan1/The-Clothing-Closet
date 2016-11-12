@@ -17,16 +17,16 @@ use Yii;
  * @property integer $IsActive
  * @property string $AddedOn
  * @property integer $AddedBy
- * @property integer $size
+ * @property integer $SizeID
  *
  * @property Brand $brand
  * @property Donation $donation
- * @property Size $size0
+ * @property Size $size
  * @property Image[] $images
  * @property Itemcategory[] $itemcategories
  * @property Itemcolor[] $itemcolors
  */
-class Allitem extends \yii\db\ActiveRecord
+class AllItem extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -43,12 +43,12 @@ class Allitem extends \yii\db\ActiveRecord
     {
         return [
             [['DonationID', 'Price', 'AddedBy'], 'required'],
-            [['DonationID', 'BrandID', 'IsPriceDec', 'IsActive', 'AddedBy', 'size'], 'integer'],
+            [['DonationID', 'BrandID', 'IsPriceDec', 'IsActive', 'AddedBy', 'SizeID'], 'integer'],
             [['Price'], 'number'],
-            [['AddedOn'], 'safe'],
+            [['AddedOn', 'ItemName'], 'safe'],
             [['BrandID'], 'exist', 'skipOnError' => true, 'targetClass' => Brand::className(), 'targetAttribute' => ['BrandID' => 'BrandID']],
             [['DonationID'], 'exist', 'skipOnError' => true, 'targetClass' => Donation::className(), 'targetAttribute' => ['DonationID' => 'DonationID']],
-            [['size'], 'exist', 'skipOnError' => true, 'targetClass' => Size::className(), 'targetAttribute' => ['size' => 'ID']],
+            [['SizeID'], 'exist', 'skipOnError' => true, 'targetClass' => Size::className(), 'targetAttribute' => ['SizeID' => 'ID']],
         ];
     }
 
@@ -59,14 +59,14 @@ class Allitem extends \yii\db\ActiveRecord
     {
         return [
             'ItemID' => 'Item ID',
-            'DonationID' => 'Donation ID',
+            'DonationID' => 'Donation',
             'Price' => 'Price',
             'BrandID' => 'Brand',
-            'IsPriceDec' => 'Is Price Dec',
+            'IsPriceDec' => 'Price Decrease?',
             'IsActive' => 'Active?',
             'AddedOn' => 'Added On',
             'AddedBy' => 'Added By',
-            'size' => 'Size',
+            'SizeID' => 'Size',
         ];
     }
 
@@ -89,9 +89,9 @@ class Allitem extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSize0()
+    public function getSize()
     {
-        return $this->hasOne(Size::className(), ['ID' => 'size']);
+        return $this->hasOne(Size::className(), ['ID' => 'SizeID']);
     }
 
     /**
@@ -116,6 +116,16 @@ class Allitem extends \yii\db\ActiveRecord
     public function getItemcolors()
     {
         return $this->hasMany(Itemcolor::className(), ['ItemID' => 'ItemID']);
+    }
+
+    public function getAddedBy()
+    {
+        return $this->hasOne(Person::className(), ['PersonID' => 'AddedBy']);
+    }
+
+    public function getDonatedBy()
+    {
+        return $this->donation->addedBy;
     }
 
     // public function getSize()

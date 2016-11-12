@@ -15,8 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->ItemID], ['class' => 'btn btn-primary']) ?>
+    <div class="pull-right" style="padding-bottom:20px">
+        <?= Html::a('Update', ['update', 'id' => $model->ItemID], ['class' => 'btn btn-primary', 'style' => 'margin-right:4px']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->ItemID], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -24,28 +24,39 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
-    </p>
+    </div>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'ItemID',
-            'DonationID',
+            [
+                'attribute' => 'DonationBy',
+                'format' => 'raw',
+                'value' => $model->donation->person->fullName,
+            ],
             'Price',
             [
                 'attribute' => 'BrandID',
                 'format' => 'raw',
                 'value' => $model->brand->BrandName,
             ],
-            'IsPriceDec',
-            'IsActive',
+            [
+                'attribute' => 'IsPriceDec',
+                'format' => 'raw',
+                'value' => $model->IsPriceDec == 1 ? "Yes":"No",
+            ],
             'AddedOn',
-            'AddedBy',
+            [
+                'attribute' => 'AddedBy',
+                'format' => 'raw',
+                'value' => $model->addedBy->fullName,
+            ],
             //'size',
             [
                 'attribute' => 'size',
                 'format' => 'raw',
-                'value' => $model->size->'$Size',
+                'value' => $model->size->Size,
             ],
         ],
     ]) ?>

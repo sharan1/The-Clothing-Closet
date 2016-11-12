@@ -15,24 +15,39 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
+    <div class="pull-right" style="padding-bottom:20px">
         <?= Html::a('Create Item', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    </div>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'ItemID',
-            'DonationID',
+            'ItemName',
+            [
+                'attribute' => 'DonatedBy',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return $model->donation->person->fullName;
+                },
+            ],
             'Price',
-            'BrandID',
-            'IsPriceDec',
-            // 'IsActive',
-            // 'AddedOn',
-            // 'AddedBy',
-            // 'size',
+            [
+                'attribute' => 'BrandName',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return $model->brand->BrandName;
+                },
+            ],
+            [
+                'attribute' => 'IsPriceDec',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return $model->IsPriceDec == 1 ? "Yes": "No";
+                },
+                'filter' => [1 => "Yes", 0 => "No"],
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

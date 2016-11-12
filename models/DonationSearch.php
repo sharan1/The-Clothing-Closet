@@ -12,6 +12,7 @@ use app\models\Donation;
  */
 class DonationSearch extends Donation
 {
+    public $DonatedBy, $AddedByName;
     /**
      * @inheritdoc
      */
@@ -19,7 +20,7 @@ class DonationSearch extends Donation
     {
         return [
             [['DonationID', 'PersonID', 'NumItems', 'AddedBy'], 'integer'],
-            [['TaxDocLoc', 'AddedOn'], 'safe'],
+            [['TaxDocLoc', 'AddedOn', 'DonatedBy', 'AddedByName'], 'safe'],
         ];
     }
 
@@ -41,12 +42,27 @@ class DonationSearch extends Donation
      */
     public function search($params)
     {
-        $query = Donation::find();
+        $query = Donation::find()->join('INNER JOIN', 'Person',Donation::tableName().'.PersonID = '.Person::tableName().'.PersonID');
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+        ]);
+
+        $dataProvider->setSort([
+            'attributes' => [
+                'DonatedBy' => [
+                    'asc' => [Person::tableName().'.FirstName' => SORT_ASC],
+                    'desc' => [Person::tableName().'.FirstName' => SORT_DESC]
+                ],
+                'AddedByName' => [
+                    'asc' => [Person::tableName().'.FirstName' => SORT_ASC],
+                    'desc' => [Person::tableName().'.FirstName' => SORT_DESC]
+                ],
+                'NumItems',
+                'AddedOn'
+            ]
         ]);
 
         $this->load($params);
@@ -62,11 +78,19 @@ class DonationSearch extends Donation
             'DonationID' => $this->DonationID,
             'PersonID' => $this->PersonID,
             'NumItems' => $this->NumItems,
-            'AddedOn' => $this->AddedOn,
-            'AddedBy' => $this->AddedBy,
         ]);
 
-        $query->andFilterWhere(['like', 'TaxDocLoc', $this->TaxDocLoc]);
+        $query->filterWhere(['or',
+            ['like','FirstName',$this->DonatedBy],
+            ['like','LastName', $this->DonatedBy]
+        ]);
+
+        $query->andFilterWhere(['like', Donation::tableName().'.AddedOn', $this->AddedOn]);
+
+        $query->filterWhere(['or',
+            ['like','FirstName',$this->AddedByName],
+            ['like','LastName', $this->AddedByName]
+        ]);
 
         return $dataProvider;
     }

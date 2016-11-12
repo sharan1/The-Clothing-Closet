@@ -10,7 +10,7 @@ use app\models\Size;
 /**
  * sizeSearch represents the model behind the search form about `app\models\Size`.
  */
-class sizeSearch extends Size
+class SizeSearch extends Size
 {
     /**
      * @inheritdoc

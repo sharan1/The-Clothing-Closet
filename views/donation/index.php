@@ -24,13 +24,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'PersonID',
-            'TaxDocLoc:ntext',
+            [
+                'attribute' => 'DonatedBy',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return $model->person->fullName;
+                },
+            ],
             'NumItems',
             'AddedOn',
-            'AddedBy',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'attribute' => 'AddedByName',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return $model->addedBy->fullName;
+                },
+            ],
+            [  
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {update}',
+            ]
         ],
     ]); ?>
 </div>

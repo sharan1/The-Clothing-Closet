@@ -45,7 +45,7 @@ class Donation extends \yii\db\ActiveRecord
         return [
             'DonationID' => 'Donation ID',
             'TaxDocLoc' => 'Tax Doc Loc',
-            'PersonID' => 'Person ID',
+            'PersonID' => 'Donated By',
             'NumItems' => 'Num Items',
             'AddedOn' => 'Added On',
             'AddedBy' => 'Added By',
@@ -54,6 +54,11 @@ class Donation extends \yii\db\ActiveRecord
 
     public function getPerson()
     {
-        return Donation::find()->where(['PersonID' => $this->PersonID])->one();
+        return Person::find()->where(['PersonID' => $this->PersonID])->one();
+    }
+
+    public function getAddedBy()
+    {
+        return Person::find()->where(['PersonID' => $this->AddedBy])->one();
     }
 }
