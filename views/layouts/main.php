@@ -57,13 +57,13 @@ AppAsset::register($this);
     NavBar::end();
     ?>
 
-    <div class="container">
+    <div class="container" style="margin-left:225px;max-width:1050px">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
         <?= $content ?>
     </div>
-    <?= !(Yii::$app->user->isGuest) ? $this->render('menu.php') : ''; ?>
+    <?php echo !(Yii::$app->user->isGuest) ? $this->render('menu.php') : ''; ?>
 </div>
 
 <footer class="footer">
