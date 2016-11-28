@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\Person;
 
 /**
  * This is the model class for table "ItemSold".
@@ -30,6 +31,7 @@ class ItemSold extends \yii\db\ActiveRecord
         return [
             [['CustomerID', 'AddedBy'], 'integer'],
             [['AddedOn'], 'safe'],
+            [['SellPrice'], 'integer'],
         ];
     }
 
@@ -43,6 +45,16 @@ class ItemSold extends \yii\db\ActiveRecord
             'CustomerID' => 'Customer ID',
             'AddedOn' => 'Added On',
             'AddedBy' => 'Added By',
+
         ];
     }
+   
+    public function getAddedBy()
+    {
+        return Person::find()->where(['PersonID' => $this->AddedBy])->one();
+    } 
+    public function getBuyer()
+    {
+        return Person::find()->where(['PersonID' => $this->CustomerID])->one();
+    } 
 }
