@@ -11,9 +11,9 @@ use yii\base\Model;
 class AdminLogin extends Model
 {
 
-    public $username;
-    public $email;
-    public $password;
+    public $UserName;
+    public $Email;
+    public $Password;
     public $rememberMe = true;
     private $_user = false;
 
@@ -23,9 +23,9 @@ class AdminLogin extends Model
     public function rules()
     {
         return [
-            [['password', 'email'], 'required'],
+            [['Password'], 'required'],
             ['rememberMe', 'boolean'],
-            ['password', 'validatePassword'],
+            ['Password', 'validatePassword'],
         ];
     }
 
@@ -45,7 +45,7 @@ class AdminLogin extends Model
             {
                 if ($user->IsActive != 0) 
                 {
-                        if (!$user || !$user->verifyPassword($this->password)) 
+                        if (!$user || !$user->verifyPassword($this->Password)) 
                         {
                             $this->addError($attribute, 'Incorrect username or password.');
                         }
@@ -84,15 +84,41 @@ class AdminLogin extends Model
     {
         if ($this->_user === false) 
         {
-            if(strpos($this->email, '@') == -1)
+            if(strpos($this->UserName, '@') !== false)
             {
-                $this->_user = Person::findByEmail($this->email);
+                $this->_user = Person::findByEmail($this->UserName);
             }
             else
             {
-                $this->_user = Person::findByUsername($this->email);
+                $this->_user = Person::findByUsername($this->UserName);
             }
         }
         return $this->_user;
+    }
+
+    public static function sendForgotPasswordMail($email)
+    {
+        $user = Person::findByEmail($email);
+        if(isset($user))
+        {
+            $link = '';
+            $message = "Hi ".$user->FirstName.",\n\t Please reset your password by clicking on this link:\n\n\t".$link."\n\nRegards,\nTeam Clothing Closet\n";
+            $to = $email;
+            $subject = "Reset Password: Clothing Closet";
+            $headers = 'From: The Clothing Closet <admin@clothingcloset.com>';
+            $status = mail($to, $subject, $message, $headers);
+            if($status)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 }

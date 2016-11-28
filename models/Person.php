@@ -23,6 +23,7 @@ use app\models\Privilege;
  */
 class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
+    public $confirmPassword;
     /**
      * @inheritdoc
      */
@@ -41,8 +42,13 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['Address'], 'string'],
             [['PrivilegeID'], 'integer'],
             [['FirstName', 'LastName', 'UserName', 'Email'], 'string', 'max' => 30],
+            //['UserName', 'unique', 'targetAttribute' => ['UserName'], 'message' => 'Username must be unique.'],
+            [['UserName','Email'], 'unique'],
             [['Type', 'ContactNum'], 'string', 'max' => 20],
-            [['Password', 'PasswordHash'], 'string', 'max' => 55],
+            [['Password', 'PasswordHash','confirmPassword'], 'string', 'max' => 55],
+            [['confirmPassword'], 'safe'],
+            ['Password', 'string', 'min' => 6],
+            ['confirmPassword', 'compare', 'compareAttribute' => 'Password', 'message' => 'The password does not match.'],
         ];
     }
 
@@ -65,6 +71,7 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'PrivilegeID' => 'Privilege',
             'IsSubscribed' => 'Is Subscribed',
             'IsActive' => 'Is Active',
+            'confirmPassword' => 'Confirm Password'
         ];
     }
 
@@ -72,8 +79,9 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         if($insert)
         {
-            $default_password = "welcome";
-            $this->Password = md5($default_password);
+            if(!isset($this->Password) || empty($this->Password))
+                $this->Password = "welcome";
+            $this->Password = md5($this->Password);
             $this->PasswordHash = Yii::$app->getSecurity()->generateRandomString();
         }
         return parent::beforeSave($insert);

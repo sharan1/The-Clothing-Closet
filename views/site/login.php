@@ -7,32 +7,34 @@ use yii\helpers\Html;
 /* @var $form yii\widgets\ActiveForm */
 
 ?>
-<div class="login-box">
-    <div class="login-logo">
-        <a href=""><b>Login Form</b></a>
+
+<div class="login-container">
+    <div class="title">
+        <center><h3 style="color: #000; width: 360px; margin-left: 20px; font-weight: 100;"><b>Welcome to the Clothing Closet</b></h3></center>
     </div>
-    <!-- /.login-logo -->
-    <div class="login-box-body">
-        <p class="login-box-msg"><!-- Sign in to start your session --></p>
-
-        <?php $form = ActiveForm::begin(); ?>
-
-        <div class="form-group has-feedback">
-            <?= Html::activeTextInput($model, 'email', ['class' => 'form-control', 'placeholder' => 'Enter Email Address']) ?>
-            <?= Html::error($model, 'email') ?>
-        </div>
-
-        <div class="form-group has-feedback">
-            <?= Html::activePasswordInput($model, 'password', ['class' => 'form-control', 'placeholder' => 'Enter Password']) ?>
-            <?= Html::error($model, 'password') ?>
-        </div>
-
-        <div class="form-group ">
-            <?= Html::submitButton('Submit', ['class' => 'btn btn-primary btn-block btn-flat']) ?>
-        </div><!-- /.col -->
-        <?php ActiveForm::end(); ?>
-    </div>
-    <!-- /.login-box-body -->
+    <div id="tabs">
+        <ul>
+            <li onClick="showLogin()" id="loginbutton">Login</li>
+            <li onClick="showRP()" id="rstPass">Forgot Password</li>
+        </ul>
+    </div> <!-- end tabs div -->
+    <form class="login-form" method="post">
+        <div id="wrapper">
+            <div id="login-wrapper">
+                <div id="info">Please enter your username and password to login</div>
+                    <input type="text" id="login-text" name = "UserName" placeholder="Username or Email" />
+                    <input type="password" id="login-pass" name = "Password" placeholder="Password" />
+                <input type="submit" value="Login" id="login-button" />
+            </div> <!-- end login-wrapper div -->
+            <div id="rp-wrapper">
+                <div id="info">Enter your email to reset your password</div>
+                <input type="text" class="email-text" id="login-text" name = "Email" placeholder="Email" />
+                <div class="empty-space">
+                    <b><span id="show-message" style="color:#000"></span></b>
+                </div>
+                <input type="button" value="Send" id="login-button" class = "rp-button"/>          
+            </div> <!-- end rp-wrapper div -->
+        </div> <!-- end wrapper div -->
+    </form>
 </div>
-<!-- /.login-box -->
 </body>
