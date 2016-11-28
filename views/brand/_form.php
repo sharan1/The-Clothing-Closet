@@ -14,12 +14,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'BrandName')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'IsActive')->textInput() ?>
-
-    <?= $form->field($model, 'AddedOn')->textInput() ?>
-
-    <?= $form->field($model, 'AddedBy')->textInput() ?>
-
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

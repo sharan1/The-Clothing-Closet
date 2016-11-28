@@ -101,7 +101,9 @@ class BrandController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->IsActive = 0;
+        $model->save();
 
         return $this->redirect(['index']);
     }

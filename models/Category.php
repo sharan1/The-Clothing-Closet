@@ -27,7 +27,8 @@ class Category extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['IsActive'], 'integer'],
+            [['IsActive', 'AddedBy'], 'integer'],
+            [['AddedOn'], 'safe'],
             [['CategoryName'], 'string', 'max' => 30],
         ];
     }
@@ -41,6 +42,21 @@ class Category extends \yii\db\ActiveRecord
             'CategoryID' => 'Category ID',
             'CategoryName' => 'Category Name',
             'IsActive' => 'Is Active',
+            'AddedBy' => 'Added By',
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if($insert)
+        {
+            $this->AddedBy = !(Yii::$app->user->isGuest) ? Yii::$app->user->id : null;
+        }
+        return parent::beforeSave($insert);
+    }
+
+    public function getAddedBy()
+    {
+        return $this->hasOne(Person::className(), ['PersonID' => 'AddedBy']);
     }
 }

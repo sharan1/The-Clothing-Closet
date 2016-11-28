@@ -41,7 +41,7 @@ class PersonSearch extends Person
      */
     public function search($params)
     {
-        $query = Person::find();
+        $query = Person::find()->where(['IsActive' => 1]);
 
         // add conditions that should always apply here
 
