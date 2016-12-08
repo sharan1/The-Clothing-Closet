@@ -58,6 +58,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => $model->size->Size,
             ],
+            [
+                'attribute' => 'Image',
+                'format' => 'raw',
+                'value' => $model->getImageUrl(),
+            ]
         ],
     ]) ?>
 

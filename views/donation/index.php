@@ -42,7 +42,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [  
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {update}',
+                'template' => '{view} {update} {tax}',
+                'buttons' => [
+                    'tax' => function($url, $model) {
+                        return Html::a('Recipt', ['recipt', 'id' => $model->DonationID], [
+                            'class' => 'btn btn-xs btn-info'
+                            ]);
+                    },
+                ]
             ]
         ],
     ]); ?>

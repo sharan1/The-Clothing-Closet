@@ -46,7 +46,7 @@ class Donation extends \yii\db\ActiveRecord
             'DonationID' => 'Donation ID',
             'TaxDocLoc' => 'Tax Doc Loc',
             'PersonID' => 'Donated By',
-            'NumItems' => 'Num Items',
+            'NumItems' => 'Number of Items',
             'AddedOn' => 'Added On',
             'AddedBy' => 'Added By',
         ];

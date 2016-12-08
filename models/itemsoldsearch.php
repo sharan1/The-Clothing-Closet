@@ -10,7 +10,7 @@ use app\models\Itemsold;
 /**
  * itemsoldsearch represents the model behind the search form about `app\models\Itemsold`.
  */
-class itemsoldsearch extends Itemsold
+class ItemSoldSearch extends ItemSold
 {
     /**
      * @inheritdoc
@@ -18,7 +18,7 @@ class itemsoldsearch extends Itemsold
     public function rules()
     {
         return [
-            [['ItemID', 'CustomerID', 'AddedBy'], 'integer'],
+            [['ItemID', 'CustomerID'], 'integer'],
             [['AddedOn'], 'safe'],
         ];
     }
@@ -62,7 +62,6 @@ class itemsoldsearch extends Itemsold
             'ItemID' => $this->ItemID,
             'CustomerID' => $this->CustomerID,
             'AddedOn' => $this->AddedOn,
-            'AddedBy' => $this->AddedBy,
         ]);
 
         return $dataProvider;

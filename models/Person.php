@@ -62,7 +62,7 @@ class Person extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'FirstName' => 'First Name',
             'LastName' => 'Last Name',
             'Type' => 'Type',
-            'ContactNum' => 'Contact Num',
+            'ContactNum' => 'Contact Number',
             'Address' => 'Address',
             'UserName' => 'User Name',
             'Password' => 'Password',

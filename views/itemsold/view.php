@@ -12,30 +12,28 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="itemsold-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->ItemID], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->ItemID], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+    <h1><?= "ItemSold #".Html::encode($this->title) ?></h1>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'ItemID',
-            'CustomerID',
-            'AddedOn',
             [
-                'attribute' => 'AddedBy',
+                'attribute' => 'Item',
                 'format' => 'raw',
-                'value' => $model->addedBy->fullName,
+                'value' => $model->item->ItemName,
             ],
+            [
+                'attribute' => 'Customer',
+                'format' => 'raw',
+                'value' => isset($model->buyer) ? $model->buyer->fullName : "Anonymous buyer",
+            ],
+            [
+                'attribute' => 'Image',
+                'format' => 'raw',
+                'value' => $model->item->getImageUrl(),
+            ],
+            'AddedOn',
 
         ],
     ]) ?>

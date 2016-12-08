@@ -23,6 +23,7 @@ class ComposerStaticInit30d9abf13453dffec4c6be6c8e4e5a3c
             'yii\\codeception\\' => 16,
             'yii\\bootstrap\\' => 14,
             'yii\\' => 4,
+            'yii2mod\\alert\\' => 14,
         ),
         'k' => 
         array (
@@ -76,6 +77,10 @@ class ComposerStaticInit30d9abf13453dffec4c6be6c8e4e5a3c
         'yii\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2',
+        ),
+        'yii2mod\\alert\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yii2mod/yii2-sweet-alert',
         ),
         'kartik\\sidenav\\' => 
         array (

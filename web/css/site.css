@@ -320,3 +320,14 @@ tr.myDragClass td:last-child {
     text-align: center;
     margin-top: 5px;
 }
+
+.recipt-container 
+{
+    background-color: #b2b2b2;
+    width: 600px;
+    border: 1px solid black;
+}
+
+.recipt-title {
+    text-align: center;
+}

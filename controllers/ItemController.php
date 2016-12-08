@@ -4,10 +4,11 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Allitem;
-use app\models\itemSearch;
+use app\models\ItemSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ItemController implements the CRUD actions for Allitem model.
@@ -35,7 +36,7 @@ class ItemController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new itemSearch();
+        $searchModel = new ItemSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -65,7 +66,22 @@ class ItemController extends Controller
     {
         $model = new Allitem();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()))
+        {
+            $file = UploadedFile::getInstance($model, 'Image');
+            if(isset($file))
+            {
+                $model->Image = $file->name;
+            }
+            if(!$model->validate())
+            {
+                $model->addError('Image', 'Image Validation failed');
+            }
+            else
+            {
+                $model->save();
+                $model->uploadImage($file);
+            }
             return $this->redirect(['view', 'id' => $model->ItemID]);
         } else {
             return $this->render('create', [
@@ -83,10 +99,31 @@ class ItemController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $image = $model->Image;
+        if ($model->load(Yii::$app->request->post())) 
+        {
+            $file = UploadedFile::getInstance($model, 'Image');
+            if(isset($file))
+            {
+                $model->Image = $file->name;
+            }
+            else
+            {
+                $model->Image = $image;
+            }
+            if(!$model->validate())
+            {
+                $model->addError('Image', 'Image Validation failed');
+            }
+            else
+            {
+                $model->save();
+                $model->uploadImage($file);
+            }
             return $this->redirect(['view', 'id' => $model->ItemID]);
-        } else {
+        }
+        else
+        {
             return $this->render('update', [
                 'model' => $model,
             ]);

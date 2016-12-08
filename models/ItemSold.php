@@ -29,9 +29,8 @@ class ItemSold extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CustomerID', 'AddedBy'], 'integer'],
+            [['CustomerID'], 'integer'],
             [['AddedOn'], 'safe'],
-            [['SellPrice'], 'integer'],
         ];
     }
 
@@ -44,15 +43,15 @@ class ItemSold extends \yii\db\ActiveRecord
             'ItemID' => 'Item ID',
             'CustomerID' => 'Customer ID',
             'AddedOn' => 'Added On',
-            'AddedBy' => 'Added By',
 
         ];
     }
    
-    public function getAddedBy()
+    public function getItem()
     {
-        return Person::find()->where(['PersonID' => $this->AddedBy])->one();
-    } 
+        return AllItem::find()->where(['ItemID' => $this->ItemID])->one();
+    }
+
     public function getBuyer()
     {
         return Person::find()->where(['PersonID' => $this->CustomerID])->one();

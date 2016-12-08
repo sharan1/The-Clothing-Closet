@@ -3,6 +3,8 @@
 namespace app\models;
 use app\models\Size;
 use app\models\Brand;
+use yii\web\UploadedFile;
+use yii\db\Query;
 
 use Yii;
 
@@ -28,6 +30,8 @@ use Yii;
  */
 class AllItem extends \yii\db\ActiveRecord
 {
+    public $category_details;
+    public $color_details;
     /**
      * @inheritdoc
      */
@@ -42,13 +46,11 @@ class AllItem extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['DonationID', 'Price', 'AddedBy'], 'required'],
-            [['DonationID', 'BrandID', 'IsPriceDec', 'IsActive', 'AddedBy', 'SizeID'], 'integer'],
+            [['ItemName','DonationID', 'Price'], 'required'],
+            [['DonationID', 'BrandID', 'IsPriceDec', 'AddedBy', 'SizeID'], 'integer'],
             [['Price'], 'number'],
-            [['AddedOn', 'ItemName'], 'safe'],
-            [['BrandID'], 'exist', 'skipOnError' => true, 'targetClass' => Brand::className(), 'targetAttribute' => ['BrandID' => 'BrandID']],
-            [['DonationID'], 'exist', 'skipOnError' => true, 'targetClass' => Donation::className(), 'targetAttribute' => ['DonationID' => 'DonationID']],
-            [['SizeID'], 'exist', 'skipOnError' => true, 'targetClass' => Size::className(), 'targetAttribute' => ['SizeID' => 'ID']],
+            [['AddedOn', 'ItemName', 'Image', 'Description', 'category_details', 'color_details'], 'safe'],
+            [['Image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
         ];
     }
 
@@ -67,7 +69,75 @@ class AllItem extends \yii\db\ActiveRecord
             'AddedOn' => 'Added On',
             'AddedBy' => 'Added By',
             'SizeID' => 'Size',
+            'Image' => 'Image'
         ];
+    }
+
+
+    public function beforeSave($insert)
+    {
+        if($insert)
+        {
+            $this->AddedBy = Yii::$app->user->id;
+        }
+        return parent::beforeSave($insert);
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        if(isset($this->category_details) && !empty($this->category_details))
+        {
+            if(!$insert)
+            {
+                $pairings = ItemCategory::find()->where(['ItemID' => $this->ItemID])->all();
+                foreach($pairings as $key => $value) 
+                {
+                    $value->delete();
+                }
+            }
+            foreach($this->category_details as $key => $value) 
+            {
+                $new = new ItemCategory;
+                $new->ItemID = $this->ItemID;
+                $new->CategoryID = $value;
+                $new->save();
+            }
+        }
+
+        if(isset($this->color_details) && !empty($this->color_details))
+        {
+            if(!$insert)
+            {
+                $pairings = ItemColor::find()->where(['ItemID' => $this->ItemID])->all();
+                foreach($pairings as $key => $value) 
+                {
+                    $value->delete();
+                }
+            }
+            foreach($this->color_details as $key => $value) 
+            {
+                $new = new ItemColor;
+                $new->ItemID = $this->ItemID;
+                $new->ColorID = $value;
+                $new->save();
+            }
+        }
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
+    public function afterFind()
+    {
+        parent::afterFind();
+        $query = new Query;
+        $query->select('CategoryID')->from('ItemCategory')->where(['ItemID' => $this->ItemID]);
+        $data = $query->all();
+        $this->category_details = array_column($data, 'CategoryID');
+
+        $query = new Query;
+        $query->select('ColorID')->from('ItemColor')->where(['ItemID' => $this->ItemID]);
+        $data = $query->all();
+        $this->color_details = array_column($data, 'ColorID');
+        //$this->Image = UploadedFile::getInstance($this, 'Image');
     }
 
     /**
@@ -128,8 +198,35 @@ class AllItem extends \yii\db\ActiveRecord
         return $this->donation->addedBy;
     }
 
-    // public function getSize()
-    // {
-    //     return Size::find()->where(['size' => $this->ID])->one();
-    // }
+    public function uploadImage($file)
+    {
+        if ($this->validate() && isset($file)) 
+        {
+            $filename = 'img/Item_'.$this->ItemID.''.substr($this->Image, strpos($this->Image, '.'));
+            $file->saveAs($filename);
+            // foreach ($this->Image as $file) 
+            // {
+            //     $file->saveAs('uploads/' . $file->baseName . '.' . $file->extension);
+            // }
+            $this->Image = $filename;
+            $this->save();
+            return true;
+        } 
+        else 
+        {
+            return false;
+        }
+    }
+
+    public function getImageUrl()
+    {
+        if(isset($this->Image)) 
+        { 
+            return \yii\helpers\Html::img(Yii::getAlias('@web').'/'.$this->Image, ['width' => 100,'height'=>60]);
+        }
+        else
+        {
+            return NULL;
+        }
+    }
 }

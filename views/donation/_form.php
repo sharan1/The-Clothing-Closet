@@ -14,7 +14,7 @@ use app\models\Person;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'PersonID')->dropdownList(ArrayHelper::map(Person::find()->all(), 'PersonID', function($person) { return $person->fullName;}), ['prompt' => "Select Person"]); ?>
+    <?= $form->field($model, 'PersonID')->dropdownList(ArrayHelper::map(Person::find()->all(), 'PersonID', function($person) { return $person->fullName;}), ['prompt' => "Select Person", 'class' => 'select2']); ?>
 
     <?= $form->field($model, 'NumItems')->textInput(['type' => 'number']) ?>
 

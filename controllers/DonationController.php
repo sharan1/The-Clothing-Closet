@@ -106,6 +106,15 @@ class DonationController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionRecipt($id)
+    {
+        $model = $this->findModel($id);
+
+        return $this->render('recipt', [
+            'model' => $model
+        ]);
+    }
+
     /**
      * Finds the Donation model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

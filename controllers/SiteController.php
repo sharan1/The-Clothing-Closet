@@ -104,6 +104,14 @@ class SiteController extends Controller
                         $userDetails = Person::findIdentity(Yii::$app->user->id);
                         if (isset($userDetails)) 
                         {
+                            if(Yii::$app->user->isGuest || Yii::$app->user->identity->PrivilegeID == 3)
+                            {
+                                $this->redirect(['/users'])->send();
+                            }
+                            else
+                            {
+
+                            }
                             $this->redirect(['/person'])->send();
                         } 
                         else 
@@ -119,6 +127,12 @@ class SiteController extends Controller
                                 'model' => $model,
                         ]);
                     }
+                }
+                else
+                {
+                    return $this->render('login', [
+                                'model' => $model,
+                        ]);
                 }
             }
             else
@@ -142,18 +156,26 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    public function actionResetPassword($hash, $id)
+    public function actionResetPassword()
     {
+        $hash=$_GET['hash'];
+        $username = $_GET['username'];
         $resetpasswordmodel = new ResetProfilePasswordForm();
-        if ($resetpasswordmodel->load(Yii::$app->request->post())) 
+        if (!empty($_POST)) 
         {
-            $user = Person::findIdentity($id);
+            $resetpasswordmodel->load(Yii::$app->request->post());
+            $user = Person::findByUsername($username);
+            if($user->PasswordHash != $hash)
+            {
+                die("Wrong Link");
+            }
             $user->Password = md5($resetpasswordmodel->changepassword);
             $user->save();
-            $this->redirect(['/person'])->send();
+
+            $this->redirect(['/users'])->send();
         }
 
-        return $this->render('ResetProfilePassword', [
+        return $this->render('reset-password', [
             'resetpasswordmodel' => $resetpasswordmodel
         ]);
     }

@@ -19,10 +19,13 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/site.css',
-        'css/login.css'
+        'css/login.css',
+        'css/sweetalert.css'
     ];
     public $js = [
-        'js/site.js'
+        'js/site.js',
+        'js/sweetalert.min.js',
+        'js/sweetalert-dev.js'
     ];
     public $depends = [
         'app\assets\AdminAsset',
